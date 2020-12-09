@@ -26,7 +26,7 @@ type IdiomItem struct {
 type Graph struct {
 	Word string
 	ID   int
-	next []int
+	Next []int
 }
 
 func makeGraph() []Graph {
@@ -52,17 +52,19 @@ func makeGraph() []Graph {
 				next = append(next, graph[j].ID)
 			}
 		}
-		graph[i].next = next
+		graph[i].Next = next
 	}
 	return graph
 }
 
 func writeGraph(graph []Graph) {
-	data, err := json.Marshaler(graph)
+	data, err := json.Marshal(graph)
 	if err != nil {
 		log.Fatal(err)
 	}
+	ioutil.WriteFile("./files/graph.json", data, 0644)
 }
 func main() {
-
+	var graph []Graph = makeGraph()
+	writeGraph(graph)
 }
