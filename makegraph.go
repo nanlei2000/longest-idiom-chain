@@ -23,13 +23,13 @@ type IdiomItem struct {
 	Abbreviation string
 }
 
-type Graph struct {
+type GraphItem struct {
 	Word string
 	ID   int
 	Next []int
 }
 
-func makeGraph() []Graph {
+func MakeGraph() []GraphItem {
 	var res []IdiomItem
 	raw, err := ioutil.ReadFile("./files/idiom.json")
 	if err != nil {
@@ -39,9 +39,9 @@ func makeGraph() []Graph {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var graph = make([]Graph, len(res))
+	var graph = make([]GraphItem, len(res))
 	for i := 0; i < len(res); i++ {
-		graph[i] = Graph{Word: res[i].Word, ID: i}
+		graph[i] = GraphItem{Word: res[i].Word, ID: i}
 	}
 	for i := 0; i < len(res); i++ {
 		var next []int
@@ -57,7 +57,7 @@ func makeGraph() []Graph {
 	return graph
 }
 
-func writeGraph(graph []Graph) {
+func WriteGraph(graph []GraphItem) {
 	data, err := json.Marshal(graph)
 	if err != nil {
 		log.Fatal(err)
@@ -65,6 +65,6 @@ func writeGraph(graph []Graph) {
 	ioutil.WriteFile("./files/graph.json", data, 0644)
 }
 func main() {
-	var graph []Graph = makeGraph()
-	writeGraph(graph)
+	var graph []GraphItem = MakeGraph()
+	WriteGraph(graph)
 }
