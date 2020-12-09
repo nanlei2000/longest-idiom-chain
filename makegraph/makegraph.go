@@ -14,7 +14,7 @@ import (
    "word": "阿鼻地狱",
    "abbreviation": "abdy"}
 */
-type IdiomItem struct {
+type idiomItem struct {
 	Derivation   string
 	Example      string
 	Explanation  string
@@ -23,14 +23,15 @@ type IdiomItem struct {
 	Abbreviation string
 }
 
+// GraphItem 图的节点
 type GraphItem struct {
 	Word string
 	ID   int
 	Next []int
 }
 
-func MakeGraph() []GraphItem {
-	var res []IdiomItem
+func makeGraph() []GraphItem {
+	var res []idiomItem
 	raw, err := ioutil.ReadFile("./files/idiom.json")
 	if err != nil {
 		log.Fatal(err)
@@ -40,13 +41,13 @@ func MakeGraph() []GraphItem {
 		log.Fatal(err)
 	}
 	var graph = make([]GraphItem, len(res))
-	for i := 0; i < len(res); i++ {
+	for i := range res {
 		graph[i] = GraphItem{Word: res[i].Word, ID: i}
 	}
-	for i := 0; i < len(res); i++ {
-		var next []int
+	for i := range res {
+		var next []int = []int{}
 		word1 := []rune(res[i].Word)
-		for j := 0; j < len(res); j++ {
+		for j := range res {
 			word2 := []rune(res[j].Word)
 			if word2[0] == word1[len(word1)-1] && i != j {
 				next = append(next, graph[j].ID)
@@ -57,7 +58,7 @@ func MakeGraph() []GraphItem {
 	return graph
 }
 
-func WriteGraph(graph []GraphItem) {
+func writeGraph(graph []GraphItem) {
 	data, err := json.Marshal(graph)
 	if err != nil {
 		log.Fatal(err)
@@ -65,6 +66,6 @@ func WriteGraph(graph []GraphItem) {
 	ioutil.WriteFile("./files/graph.json", data, 0644)
 }
 func main() {
-	var graph []GraphItem = MakeGraph()
-	WriteGraph(graph)
+	var graph []GraphItem = makeGraph()
+	writeGraph(graph)
 }
