@@ -85,6 +85,6 @@ func findLongestChain(id int, nodeMap tNodeMap) []int {
 func main() {
 	graph := readGraph()
 	nodeMap := makeMap(graph)
-	longest := findLongestChain(22989, nodeMap)
+	longest := findLongestChain(23192, nodeMap)
 	fmt.Println(len(longest))
 }

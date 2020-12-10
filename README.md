@@ -4,3 +4,10 @@
 ```sh
 go run makegraph/makegraph.go
 ```
+
+- Find the longest path in the graph
+```sh
+go run findchain/findchain.go
+```
+
+In this [page](http://www.jielongdaquan.com/phrase/chengyujielong.aspx?pageIndex=1), it declared he found longest idiom chain. It's length is `9210`, and start with `文武双全`.While i had found a chain with this leading idiom have `9320` long!
