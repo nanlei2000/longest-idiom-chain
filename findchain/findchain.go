@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strconv"
 )
 
 // GraphItem 图的节点
@@ -13,7 +14,6 @@ type GraphItem struct {
 	ID   int
 	Next []int
 }
-
 type tNodeMap map[int]GraphItem
 
 func readGraph() []GraphItem {
@@ -80,11 +80,36 @@ func findLongestChain(id int, nodeMap tNodeMap) []int {
 		}
 		return longestChain
 	}
-	return dfs(id, []int{})
+	return dfs(id, []int{id})
+}
+
+func mapIDtoIdiom(chain []int, nodeMap tNodeMap) []string {
+	res := []string{}
+	for _, id := range chain {
+		res = append(res, nodeMap[id].Word)
+	}
+	return res
+}
+
+func writeWordsFile(words []string) {
+	filename := "./files/" +
+		words[0] +
+		"-" +
+		strconv.FormatInt(int64(len(words)), 10) +
+		".json"
+	data, err := json.Marshal(words)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := ioutil.WriteFile(filename, data, 0644); err != nil {
+		log.Fatal(err)
+	}
 }
 func main() {
 	graph := readGraph()
 	nodeMap := makeMap(graph)
 	longest := findLongestChain(23192, nodeMap)
+	words := mapIDtoIdiom(longest, nodeMap)
+	writeWordsFile(words)
 	fmt.Println(len(longest))
 }
