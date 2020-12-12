@@ -39,7 +39,7 @@ func makeMap(graph []GraphItem) tNodeMap {
 
 func findLongestChain(id int, nodeMap tNodeMap) []int {
 	var dfs func(int, []int) []int
-	maxLoopCount := 1000000
+	maxLoopCount := 1_0_000_000
 	dfs = func(id int, chain []int) []int {
 		maxLoopCount--
 		if maxLoopCount < 0 {
