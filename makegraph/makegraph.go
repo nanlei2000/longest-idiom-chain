@@ -1,4 +1,4 @@
-package main
+package makegraph
 
 import (
 	"encoding/json"
