@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 
 	"log"
 
@@ -13,14 +12,14 @@ import (
 
 func main() {
 
-	var maxLoopCount string
+	var maxLoopCount int64
 	app := &cli.App{
 		Name:  "findchain",
 		Usage: "find the longest idiom chain",
 		Flags: []cli.Flag{
-			&cli.StringFlag{
+			&cli.Int64Flag{
 				Name:        "mlc",
-				Value:       "100000",
+				Value:       100_000,
 				Usage:       "max loop count for dfs",
 				Destination: &maxLoopCount,
 			},
@@ -30,15 +29,15 @@ func main() {
 			if c.NArg() > 0 {
 				idiom = c.Args().Get(0)
 			}
+			fmt.Printf("[info] head idiom: %s, max loop count: %v\n", idiom, maxLoopCount)
 			graph := f.ReadGraph()
-			loopCount, _ := strconv.ParseInt(maxLoopCount, 10, 64)
 			idToGraphItemMap := f.MakeIDToGraphItemMap(graph)
 			wordToGraphItemMap := f.MakeWordToGraphItemMap(graph)
 			wordID := wordToGraphItemMap[idiom].ID
-			longest := f.FindLongestChain(wordID, idToGraphItemMap, loopCount)
+			longest := f.FindLongestChain(wordID, idToGraphItemMap, maxLoopCount)
 			words := f.MapIDtoIdiom(longest, idToGraphItemMap)
-			fmt.Printf("%s\n", words)
-			println(len(longest))
+			fmt.Printf("chain: %s\n", words)
+			fmt.Printf("length: %v\n", len(longest))
 			return nil
 		},
 	}
