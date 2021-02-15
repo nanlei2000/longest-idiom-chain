@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"log"
+	"os"
+	"time"
 
 	f "github.com/nanlei2000/longest-idiom-chain/findchain"
 	"github.com/urfave/cli/v2"
 )
 
 func main() {
-
 	var maxLoopCount int64
 	app := &cli.App{
 		Name:  "findchain",
@@ -19,7 +18,7 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.Int64Flag{
 				Name:        "mlc",
-				Value:       100_000,
+				Value:       5_000,
 				Usage:       "max loop count for dfs",
 				Destination: &maxLoopCount,
 			},
@@ -33,11 +32,17 @@ func main() {
 			graph := f.ReadGraph()
 			idToGraphItemMap := f.MakeIDToGraphItemMap(graph)
 			wordToGraphItemMap := f.MakeWordToGraphItemMap(graph)
-			wordID := wordToGraphItemMap[idiom].ID
-			longest := f.FindLongestChain(wordID, idToGraphItemMap, maxLoopCount)
+			item, exit := wordToGraphItemMap[idiom]
+			if !exit {
+				log.Fatalf("idiom is not exit in database")
+			}
+			now := time.Now().UnixNano() / int64(time.Millisecond)
+			longest := f.FindLongestChain(item.ID, idToGraphItemMap, maxLoopCount)
+			duration := time.Now().UnixNano()/int64(time.Millisecond) - now
 			words := f.MapIDtoIdiom(longest, idToGraphItemMap)
 			fmt.Printf("chain: %s\n", words)
 			fmt.Printf("length: %v\n", len(longest))
+			fmt.Printf("dfs took: %vms\n", duration)
 			return nil
 		},
 	}
