@@ -10,12 +10,12 @@ import (
 // GraphItem 图的节点
 type GraphItem struct {
 	Word string
-	ID   int
-	Next []int
+	ID   uint16
+	Next []uint16
 }
 
 // TNodeMap define id -> GraphItem map type
-type TNodeMap map[int]GraphItem
+type TNodeMap map[uint16]GraphItem
 
 // TWordToGraphItemMap define word -> GraphItem map type
 type TWordToGraphItemMap map[string]GraphItem
@@ -49,17 +49,17 @@ func MakeWordToGraphItemMap(graph []GraphItem) TWordToGraphItemMap {
 }
 
 // FindLongestChain perform a dfs into Graph to find longet idiom chain
-func FindLongestChain(id int, nodeMap TNodeMap, maxLoopCount int64) []int {
-	var dfs func(int, []int) []int
+func FindLongestChain(id uint16, nodeMap TNodeMap, maxLoopCount int64) []uint16 {
+	var dfs func(uint16, []uint16) []uint16
 	// maxLoopCount := 100_000
-	dfs = func(id int, chain []int) []int {
+	dfs = func(id uint16, chain []uint16) []uint16 {
 		maxLoopCount--
 		if maxLoopCount < 0 {
 			return chain
 		}
 
 		nextWordIDList := nodeMap[id].Next
-		validNextWords := []int{}
+		validNextWords := []uint16{}
 		for _, v := range nextWordIDList {
 			var isContain bool
 			for _, vc := range chain {
@@ -76,9 +76,9 @@ func FindLongestChain(id int, nodeMap TNodeMap, maxLoopCount int64) []int {
 			return chain
 		}
 		var maxLength = -1
-		longestChain := []int{}
+		longestChain := []uint16{}
 		for _, id := range validNextWords {
-			path := []int{}
+			path := []uint16{}
 			path = append(path, chain...)
 			path = append(path, id)
 			currentChain := dfs(id, path)
@@ -90,11 +90,11 @@ func FindLongestChain(id int, nodeMap TNodeMap, maxLoopCount int64) []int {
 		}
 		return longestChain
 	}
-	return dfs(id, []int{id})
+	return dfs(id, []uint16{id})
 }
 
 // MapIDtoIdiom map id list back string list
-func MapIDtoIdiom(chain []int, nodeMap TNodeMap) []string {
+func MapIDtoIdiom(chain []uint16, nodeMap TNodeMap) []string {
 	res := []string{}
 	for _, id := range chain {
 		res = append(res, nodeMap[id].Word)
