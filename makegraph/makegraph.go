@@ -1,4 +1,4 @@
-package makegraph
+package main
 
 import (
 	"encoding/json"
@@ -65,6 +65,7 @@ func writeGraph(graph []GraphItem) {
 	}
 	ioutil.WriteFile("./files/graph.json", data, 0644)
 }
+
 func main() {
 	var graph []GraphItem = makeGraph()
 	writeGraph(graph)
