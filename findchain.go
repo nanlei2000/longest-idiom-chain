@@ -51,15 +51,17 @@ func MakeWordToGraphItemMap(graph []GraphItem) TWordToGraphItemMap {
 // FindLongestChain perform a dfs into Graph to find longet idiom chain
 func FindLongestChain(id uint16, nodeMap TNodeMap, maxLoopCount int64) []uint16 {
 	var dfs func(uint16, []uint16) []uint16
+
 	dfs = func(id uint16, chain []uint16) []uint16 {
 		maxLoopCount--
 		if maxLoopCount < 0 {
 			return chain
 		}
 
-		nextWordIDList := nodeMap[id].Next
+		next := nodeMap[id].Next
 		validNextWords := []uint16{}
-		for _, v := range nextWordIDList {
+
+		for _, v := range next {
 			var isContain bool
 			for _, vc := range chain {
 				if vc == v {
@@ -74,8 +76,10 @@ func FindLongestChain(id uint16, nodeMap TNodeMap, maxLoopCount int64) []uint16 
 		if len(validNextWords) == 0 {
 			return chain
 		}
+
 		var maxLength = -1
 		longestChain := []uint16{}
+
 		for _, id := range validNextWords {
 			path := []uint16{}
 			path = append(path, chain...)

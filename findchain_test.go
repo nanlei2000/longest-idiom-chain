@@ -2,8 +2,6 @@ package main
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestFindLongestChain(t *testing.T) {
@@ -11,6 +9,8 @@ func TestFindLongestChain(t *testing.T) {
 	nodeMap := MakeIDToGraphItemMap(graph)
 	longest := FindLongestChain(23192, nodeMap, 100000)
 	words := MapIDtoIdiom(longest, nodeMap)
+
+	t.Logf("words: %s", words)
 
 	isValidChain := true
 	for i, v := range words {
@@ -26,5 +26,7 @@ func TestFindLongestChain(t *testing.T) {
 		}
 	}
 
-	assert.Equal(t, true, isValidChain, "invalid idiom chain")
+	if !isValidChain {
+		t.Fatalf("invalid chain: %s", words)
+	}
 }
